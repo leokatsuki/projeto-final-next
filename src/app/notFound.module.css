@@ -1,0 +1,50 @@
+.container {
+    max-width: 1216px;
+    margin: 0 auto;
+
+    height: 70vh;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.textContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.title {
+    font-size: 120px;
+    font-weight: 500;
+    line-height: 120%;
+    color: #5390e3;
+}
+
+.desc {
+    color: var(--softTextColor);
+}
+
+.btn {
+    display: inline-block;
+    color: #f7f9fc;
+    transition: 0.6s ease;
+    padding: 12px 24px;
+    text-align: center;
+    border: 0;
+    width: 50%;
+
+    background: linear-gradient(224.78deg, #5390e3 8.12%, #1357b3 92.21%);
+    border-radius: 4px;
+
+    position: relative;
+}
+
+.btn:hover {
+    opacity: 0.8;
+}

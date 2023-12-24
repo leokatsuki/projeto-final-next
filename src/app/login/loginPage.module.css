@@ -1,0 +1,136 @@
+.container {
+    max-width: 1216px;
+    margin: 0 auto;
+
+    padding: 128px 24px;
+    overflow: hidden;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.textContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.link{
+    color: #5390e3;
+}
+
+.inputContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 32px;
+    width: 100%;
+}
+
+.forms {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 32%;
+}
+
+.subtitle {
+    margin-bottom: 12px;
+    color: var(--softTextColor);
+}
+
+.input {
+  padding: 10px 12px;
+  background-color: #151b26;
+  border: 0;
+  border-radius: 4px;
+  color: #f7f9fc;
+  width: 100%;
+  font-family: "Rubik", sans-serif;
+  font-size: 16px;
+  line-height: 26px;
+  font-weight: 200;
+}
+
+.btn {
+  display: inline-block;
+  color: #f7f9fc;
+  transition: 0.6s ease;
+  padding: 12px 24px;
+  text-align: center;
+  border: 0;
+  cursor: pointer;
+
+  background: linear-gradient(224.78deg, #5390e3 8.12%, #1357b3 92.21%);
+  border-radius: 4px;
+
+  position: relative;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.github{
+    background: #111;
+}
+
+.google{
+    background: #ff5555;
+}
+
+
+.lines {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+    margin-top: 40px;
+}
+
+.other {
+    color: var(--softTextColor);
+}
+
+.line{
+    width: 10%;
+    height: 1px;
+    background-color: var(--softTextColor);
+}
+
+.socialLinks {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+
+.align {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+@media screen and (max-width: 1025px) {
+    .forms {
+        width: 100%;
+    }
+}
+
+
+@media screen and (max-width: 450px) {
+    .socialLinks {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .forms {
+        width: 100%;
+    }
+}
