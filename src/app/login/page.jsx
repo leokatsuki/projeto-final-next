@@ -60,7 +60,6 @@ const LoginPage = () => {
                             value={data.email}
                             onChange={(e) => {setData({...data, email: e.target.value})}}
                         />
-                        <p className={styles.error}>{data.errors.email}</p>
                     </div>
 
                     <div>
@@ -73,7 +72,6 @@ const LoginPage = () => {
                             value={data.password}
                             onChange={(e) => {setData({...data, password: e.target.value})}}
                         />
-                        <p className={styles.error}>{data.errors.password}</p>
                     </div>
 
                     <button className={styles.btn} type='submit'>Entrar</button>
