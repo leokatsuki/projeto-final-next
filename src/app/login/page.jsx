@@ -4,11 +4,16 @@ import styles from './loginPage.module.css'
 import Link from 'next/link'
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 const LoginPage = () => {
     const { status } = useSession();
-
     const router = useRouter();
+    const [data, setData] = useState({
+        email: "",
+        password: "",
+    })
+
 
     if (status === "loading") {
         return <div className={styles.loading}>Loading...</div>;
@@ -16,6 +21,16 @@ const LoginPage = () => {
 
     if (status === "authenticated"){
         router.push("/")
+    }
+
+    const loginUser = async (e) => {
+        e.preventDefault();
+        signIn('credentials', {
+            ...data,
+            redirect: false,
+        });
+        router.push("/")
+
     }
 
     return (
@@ -34,15 +49,18 @@ const LoginPage = () => {
             </div>
 
             <div className={styles.inputContainer}>
-                <form className={styles.forms}>
+                <form className={styles.forms} onSubmit={loginUser}>
                     <div>
-                        <h4 className={styles.subtitle}>Login</h4>
+                        <h4 className={styles.subtitle}>Email</h4>
                         <input
-                            type="text"
-                            id="user"
-                            name="user"
+                            type="email"
+                            id="email"
+                            name="email"
                             className={styles.input}
+                            value={data.email}
+                            onChange={(e) => {setData({...data, email: e.target.value})}}
                         />
+                        <p className={styles.error}>{data.errors.email}</p>
                     </div>
 
                     <div>
@@ -52,10 +70,13 @@ const LoginPage = () => {
                             id="password"
                             name="password"
                             className={styles.input}
+                            value={data.password}
+                            onChange={(e) => {setData({...data, password: e.target.value})}}
                         />
+                        <p className={styles.error}>{data.errors.password}</p>
                     </div>
 
-                    <button className={styles.btn}>Entrar</button>
+                    <button className={styles.btn} type='submit'>Entrar</button>
                 </form>
             </div>
 
@@ -72,7 +93,7 @@ const LoginPage = () => {
                     <Image src="/icon-google.svg" alt='' width={20} height={20} />
                     Google
                 </div>
-                <div className={`${styles.btn} ${styles.align} ${styles.github}`}>
+                <div className={`${styles.btn} ${styles.align} ${styles.github}`} onClick={() => signIn("github")}>
                     <Image src="/icon-github.svg" alt='' width={20} height={20} />
                     Github
                 </div>

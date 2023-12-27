@@ -1,8 +1,33 @@
+"use client";
 import Image from 'next/image'
 import styles from './signUpPage.module.css'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 const SignUpPage = () => {
+    const router = useRouter()
+    const [data, setData] = useState({
+        name: '',
+        email: '',
+        password: '',
+    })
+
+    const registerUser = async (e) => {
+        e.preventDefault();
+        const res = await fetch('/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({data})
+        })
+
+        const userInfo = await res.json();
+        console.log(userInfo);
+        router.push("/login");
+    }
+
   return (
     <div className={styles.container}>
             <div>
@@ -19,24 +44,28 @@ const SignUpPage = () => {
             </div>
 
             <div className={styles.inputContainer}>
-                <form className={styles.forms}>
+                <form className={styles.forms} onSubmit={registerUser}>
                     <div>
                         <h4 className={styles.subtitle}>Username</h4>
                         <input
                             type="text"
-                            id="user"
-                            name="user"
+                            id="name"
+                            name="name"
                             className={styles.input}
+                            value={data.name}
+                            onChange={(e) => {setData({...data, name: e.target.value})}}
                         />
                     </div>
 
                     <div>
                         <h4 className={styles.subtitle}>Email</h4>
                         <input
-                            type="text"
-                            id="user"
-                            name="user"
+                            type="email"
+                            id="email"
+                            name="email"
                             className={styles.input}
+                            value={data.email}
+                            onChange={(e) => {setData({...data, email: e.target.value})}}
                         />
                     </div>
 
@@ -47,10 +76,12 @@ const SignUpPage = () => {
                             id="password"
                             name="password"
                             className={styles.input}
+                            value={data.password}
+                            onChange={(e) => {setData({...data, password: e.target.value})}}
                         />
                     </div>
 
-                    <button className={styles.btn}>Cadastrar</button>
+                    <button type='submit' className={styles.btn}>Cadastrar</button>
                 </form>
             </div>
         </div>

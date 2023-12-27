@@ -4,17 +4,17 @@ import Image from 'next/image'
 
 const getData = async (slug) => {
   const res = await fetch(`http://localhost:3001/api/posts/${slug}`, {
-      cache: "no-store"
+    cache: "no-store"
   })
 
-  if(!res.ok) {
-      throw new Error("Failed");
+  if (!res.ok) {
+    throw new Error("Failed");
   }
 
   return res.json();
 }
 
-const PostPage = async ({params}) => {
+const PostPage = async ({ params }) => {
   const { slug } = params;
 
   const data = await getData(slug);
@@ -26,11 +26,25 @@ const PostPage = async ({params}) => {
           <h1 className={styles.title}>{data?.title}</h1>
           <div className={styles.user}>
             <div className={styles.userImageContainer}>
-              <Image src={data.user.image} alt='' fill className={styles.avatar} />
+              {data.user.image ? (
+                <Image
+                  src={data.user.image}
+                  alt=""
+                  fill
+                  className={styles.avatar}
+                />
+              ) : (
+                <Image
+                  src="/default-avatar.jpg"
+                  alt=""
+                  fill
+                  className={styles.avatar}
+                />
+              )}
             </div>
             <div className={styles.userTextContainer}>
               <span className={styles.username}>{data?.user.name}</span>
-              <span className={styles.date}>{data?.createdAt.substring(0,10)}</span>
+              <span className={styles.date}>{data?.createdAt.substring(0, 10)}</span>
             </div>
           </div>
         </div>
@@ -41,11 +55,11 @@ const PostPage = async ({params}) => {
       <div className={styles.content}>
         <div className={styles.description}>
           <p>
-            {data.desc}         
+            {data.desc}
           </p>
         </div>
         <div className={styles.commentSection}>
-          <Comments postSlug={slug}/>
+          <Comments postSlug={slug} />
         </div>
       </div>
     </div>
