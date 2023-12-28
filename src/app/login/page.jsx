@@ -4,15 +4,16 @@ import styles from './loginPage.module.css'
 import Link from 'next/link'
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const LoginPage = () => {
-    const { status } = useSession();
+    const { status, error } = useSession();
     const router = useRouter();
     const [data, setData] = useState({
         email: "",
         password: "",
     })
+    const [errorMessage, setErrorMessage] = useState('');
 
 
     if (status === "loading") {
@@ -23,14 +24,25 @@ const LoginPage = () => {
         router.push("/")
     }
 
+
+    
     const loginUser = async (e) => {
         e.preventDefault();
-        signIn('credentials', {
+        const result = await signIn('credentials', {
             ...data,
             redirect: false,
         });
-        router.push("/")
-
+        
+        if(result?.error){
+            console.error('Erro na autenticacao:', result.error);
+            setErrorMessage('Email ou senha incorreta. Tente Novamente!');
+            setTimeout(() => {
+                setErrorMessage('');
+            }, 3000);
+        }else{
+            router.push("/")
+        }
+        
     }
 
     return (
@@ -71,10 +83,11 @@ const LoginPage = () => {
                             className={styles.input}
                             value={data.password}
                             onChange={(e) => {setData({...data, password: e.target.value})}}
-                        />
+                            />
                     </div>
 
                     <button className={styles.btn} type='submit'>Entrar</button>
+                    {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
                 </form>
             </div>
 
