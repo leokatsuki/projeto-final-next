@@ -4,6 +4,13 @@ import styles from './signUpPage.module.css'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { z } from 'zod';
+
+const schema = z.object({
+    name: z.string().min(2).max(20),
+    email: z.string().email(),
+    password: z.string().min(6),
+});
 
 const SignUpPage = () => {
     const router = useRouter()
@@ -12,6 +19,7 @@ const SignUpPage = () => {
         email: '',
         password: '',
     })
+    const [errorMessage, setErrorMessage] = useState('');
 
     const registerUser = async (e) => {
         e.preventDefault();
@@ -23,9 +31,18 @@ const SignUpPage = () => {
             body: JSON.stringify({data})
         })
 
-        const userInfo = await res.json();
-        console.log(userInfo);
-        router.push("/login");
+        if (res.status === 200) {
+            const userInfo = await res.json();
+            console.log(userInfo);
+            router.push('/login');
+        } else {
+            const error = await res.text();
+            console.log('Erro no cadastro', error);
+            setErrorMessage(error);
+            setTimeout(() => {
+                setErrorMessage('');
+            }, 3000);
+        }
     }
 
   return (
@@ -82,6 +99,7 @@ const SignUpPage = () => {
                     </div>
 
                     <button type='submit' className={styles.btn}>Cadastrar</button>
+                    {errorMessage && (<p className={styles.errorMessage}>{errorMessage}</p>)}
                 </form>
             </div>
         </div>

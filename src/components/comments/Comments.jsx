@@ -51,7 +51,7 @@ const Comments = ({ postSlug }) => {
           </button>
         </div>
       ) : (
-        <Link href="/login">Faca login para comentar</Link>
+        <Link href="/login" className={styles.login}>Faca login para comentar</Link>
       )}
       <div className={styles.comments}>
         {data?.map((item) => (

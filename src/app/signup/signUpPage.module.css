@@ -30,6 +30,11 @@
     width: 100%;
 }
 
+.errorMessage{
+    color: red;
+}
+
+
 .forms {
     display: flex;
     flex-direction: column;

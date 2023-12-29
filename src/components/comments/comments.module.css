@@ -13,6 +13,11 @@
   gap: 30px;
 }
 
+.login{
+  color: var(--softTextColor);
+  font-weight: bold;
+}
+
 .input {
   padding: 20px;
   width: 70%;
@@ -35,7 +40,7 @@
 }
 
 .comments{
-  margin-top: 50px;
+  margin-top: 80px;
 }
 
 .comment{
