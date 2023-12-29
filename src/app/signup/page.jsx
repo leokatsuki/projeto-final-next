@@ -7,9 +7,9 @@ import { useState } from 'react';
 import { z } from 'zod';
 
 const schema = z.object({
-    name: z.string().min(2).max(20),
-    email: z.string().email(),
-    password: z.string().min(6),
+    name: z.string().min(2, { message: "Usuário deve ter no mínimo 2 caracteres." }).max(20, { message: "Usuário deve ter no máximo 20 caracteres." }).refine((value) => value.trim() !== '', { message: "Usuário é obrigatório." }),
+    email: z.string().email({ message: "Email incorreto." }).refine((value) => value.trim() !== '', { message: "Email é obrigatório." }),
+    password: z.string().min(6, { message: "A senha deve possuir no mínimo 6 caracteres." }).refine((value) => value.trim() !== '', { message: "Senha é obrigatória." }),
 });
 
 const SignUpPage = () => {
@@ -23,27 +23,38 @@ const SignUpPage = () => {
 
     const registerUser = async (e) => {
         e.preventDefault();
-        const res = await fetch('/api/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({data})
-        })
+        try {
+            // Validar os dados usando o schema do Zod
+            schema.parse(data);
 
-        if (res.status === 200) {
-            const userInfo = await res.json();
-            console.log(userInfo);
-            router.push('/login');
-        } else {
-            const error = await res.text();
-            console.log('Erro no cadastro', error);
-            setErrorMessage(error);
+            const res = await fetch('/api/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ data }),
+            });
+
+            if (res.status === 200) {
+                const userInfo = await res.json();
+                console.log(userInfo);
+                router.push('/login');
+            } else {
+                const error = await res.text();
+                console.log('Erro no cadastro', error);
+                setErrorMessage(error);
+                setTimeout(() => {
+                    setErrorMessage('');
+                }, 3000);
+            }
+        } catch (error) {
+            // Se houver erro de validação, exibir a mensagem de erro correspondente
+            setErrorMessage(error.errors[0]?.message || 'Erro no cadastro.');
             setTimeout(() => {
                 setErrorMessage('');
             }, 3000);
         }
-    }
+    };
 
   return (
     <div className={styles.container}>
@@ -71,6 +82,7 @@ const SignUpPage = () => {
                             className={styles.input}
                             value={data.name}
                             onChange={(e) => {setData({...data, name: e.target.value})}}
+                            required
                         />
                     </div>
 
@@ -83,6 +95,7 @@ const SignUpPage = () => {
                             className={styles.input}
                             value={data.email}
                             onChange={(e) => {setData({...data, email: e.target.value})}}
+                            required
                         />
                     </div>
 
@@ -95,6 +108,7 @@ const SignUpPage = () => {
                             className={styles.input}
                             value={data.password}
                             onChange={(e) => {setData({...data, password: e.target.value})}}
+                            required
                         />
                     </div>
 

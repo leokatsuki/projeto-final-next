@@ -71,6 +71,7 @@ const LoginPage = () => {
                             className={styles.input}
                             value={data.email}
                             onChange={(e) => {setData({...data, email: e.target.value})}}
+                            required
                         />
                     </div>
 
@@ -83,6 +84,7 @@ const LoginPage = () => {
                             className={styles.input}
                             value={data.password}
                             onChange={(e) => {setData({...data, password: e.target.value})}}
+                            required
                             />
                     </div>
 
