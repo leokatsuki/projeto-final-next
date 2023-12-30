@@ -16,7 +16,7 @@ const formatDate = (date) => {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
-        };
+};
 
 const NewPostPage = () => {
     const [currentDate, setCurrentDate] = useState(formatDate(new Date()));
@@ -26,6 +26,7 @@ const NewPostPage = () => {
     const [media, setMedia] = useState("");
     const [resume, setResume] = useState("");
     const [isFileUploaded, setIsFileUploaded] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const router = useRouter()
 
@@ -76,7 +77,7 @@ const NewPostPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        
+
         if (!title || !resume || !value) {
             setErrorMessage('Preencha todos os campos antes de publicar!');
             setTimeout(() => {
@@ -84,7 +85,7 @@ const NewPostPage = () => {
             }, 3000);
             return;
         }
-        
+
         if (!isFileUploaded) {
             setErrorMessage('A imagem ainda nao foi carregada!');
             setTimeout(() => {
@@ -93,19 +94,32 @@ const NewPostPage = () => {
             return;
         }
 
-        const res = await fetch("https://projeto-final-next-mocha.vercel.app/api/posts", {
-            method: "POST",
-            body: JSON.stringify({
-                title,
-                resume,
-                desc: value,
-                img: media,
-                slug: slugify(title),
-            })
-        })
+        if (isSubmitting) {
+            console.log("Aguarde a conclusão do envio anterior.");
+            return;
+        }
 
-        if(res.status === 200){
-            router.push("/blog");
+        setIsSubmitting(true);
+
+        try {
+            const res = await fetch("https://projeto-final-next-mocha.vercel.app/api/posts", {
+                method: "POST",
+                body: JSON.stringify({
+                    title,
+                    resume,
+                    desc: value,
+                    img: media,
+                    slug: slugify(title),
+                })
+            })
+
+            if (res.status === 200) {
+                router.push('/blog');
+            }
+        } catch (error) {
+            console.error("Erro ao enviar post:", error);
+        } finally {
+            setIsSubmitting(false);
         }
     }
 
@@ -182,11 +196,11 @@ const NewPostPage = () => {
                 </div>
 
                 <div className={styles.btnContainer}>
-                    <button 
-                        className={styles.btn} 
-                        type='submit' 
+                    <button
+                        className={styles.btn}
+                        type='submit'
                         onClick={handleSubmit}
-                        
+
                     >
                         Publicar
                     </button>
