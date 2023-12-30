@@ -9,16 +9,29 @@ import {
     getDownloadURL,
 } from "firebase/storage";
 import { app } from '@/utils/firebase';
+import { useRouter } from 'next/navigation';
+
+const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+        };
 
 const NewPostPage = () => {
+    const [currentDate, setCurrentDate] = useState(formatDate(new Date()));
     const [file, setFile] = useState(null);
     const [value, setValue] = useState("");
     const [title, setTitle] = useState("");
     const [media, setMedia] = useState("");
     const [resume, setResume] = useState("");
-    
-    useEffect(() =>{
+    const [isFileUploaded, setIsFileUploaded] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const router = useRouter()
+
+    useEffect(() => {
         const storage = getStorage(app);
+
         const upload = () => {
             const name = new Date().getTime() + file.name;
             const storageRef = ref(storage, name);
@@ -44,6 +57,7 @@ const NewPostPage = () => {
                 () => {
                     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                         setMedia(downloadURL);
+                        setIsFileUploaded(true);
                     });
                 }
             );
@@ -51,68 +65,135 @@ const NewPostPage = () => {
         file && upload();
     }, [file]);
 
-const slugify = (str) =>
-str
-  .toLowerCase()
-  .trim()
-  .replace(/[^\w\s-]/g, "")
-  .replace(/[\s_-]+/g, "-")
-  .replace(/^-+|-+$/g, "");
+    const slugify = (str) =>
+        str
+            .toLowerCase()
+            .trim()
+            .replace(/[^\w\s-]/g, "")
+            .replace(/[\s_-]+/g, "-")
+            .replace(/^-+|-+$/g, "");
 
-const handleSubmit = async () => {
-    const res = await fetch("/api/posts", {
-        method: "POST",
-        body: JSON.stringify({
-            title,
-            resume,
-            desc: value,
-            img: media,
-            slug: slugify(title),
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        
+        if (!title || !resume || !value) {
+            setErrorMessage('Preencha todos os campos antes de publicar!');
+            setTimeout(() => {
+                setErrorMessage('');
+            }, 3000);
+            return;
+        }
+        
+        if (!isFileUploaded) {
+            setErrorMessage('A imagem ainda nao foi carregada!');
+            setTimeout(() => {
+                setErrorMessage('');
+            }, 3000);
+            return;
+        }
+
+        const res = await fetch("/api/posts", {
+            method: "POST",
+            body: JSON.stringify({
+                title,
+                resume,
+                desc: value,
+                img: media,
+                slug: slugify(title),
+            })
         })
-    })
-}
 
-return (
-    <div className={styles.container}>
-        <h1 className={styles.title}>Adicionar novo post</h1>
-        <p className={styles.desc}>
-            Preencha os campos abaixo para adicionar um novo post ao blog.
-        </p>
+        if(res.status === 200){
+            router.push("/blog");
+        }
+    }
 
-        <form className={styles.form}>
-            <div className={styles.firstRow}>
-                <div className={styles.item1}>
-                    <h4 className={styles.subtitle}>Data</h4>
-                    <input type="date" name="data" id="" required className={styles.input} />
+    return (
+        <div className={styles.container}>
+            <h1 className={styles.title}>Adicionar novo post</h1>
+            <p className={styles.desc}>
+                Preencha os campos abaixo para adicionar um novo post ao blog.
+            </p>
+
+            <form className={styles.form}>
+                <div className={styles.firstRow}>
+                    <div className={styles.item1}>
+                        <h4 className={styles.subtitle}>Data</h4>
+                        <input
+                            type="date"
+                            name="date"
+                            id=""
+                            className={styles.input}
+                            value={currentDate}
+                            onChange={(e) => setCurrentDate(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className={styles.item2}>
+                        <h4 className={styles.subtitle}>Título</h4>
+                        <input
+                            type="text"
+                            name="title"
+                            id=""
+                            className={styles.input}
+                            onChange={(e) => setTitle(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className={styles.item1}>
+                        <h4 className={styles.subtitle}>Adicionar imagem</h4>
+                        <input
+                            type="file"
+                            name="title"
+                            id="image"
+                            className={styles.input}
+                            onChange={(e) => setFile(e.target.files[0])}
+                            required
+                        />
+                    </div>
                 </div>
 
-                <div className={styles.item2}>
-                    <h4 className={styles.subtitle}>Título</h4>
-                    <input type="text" name="title" id="" required className={styles.input} onChange={(e) => setTitle(e.target.value)} />
+                <div className={styles.secondRow}>
+                    <h4 className={styles.subtitle}>Resumo do post</h4>
+                    <input
+                        type="text"
+                        name="title"
+                        id=""
+                        className={styles.input}
+                        onChange={(e) => setResume(e.target.value)}
+                        required
+                    />
                 </div>
 
-                <div className={styles.item1}>
-                    <h4 className={styles.subtitle}>Adicionar imagem</h4>
-                    <input type="file" name="title" id="image" required className={styles.input} onChange={(e) => setFile(e.target.files[0])} />
+                <div className={styles.thirdRow}>
+                    <h4 className={styles.subtitle}>Descrição</h4>
+                    <textarea
+                        name="description"
+                        id=""
+                        rows="8"
+                        required
+                        className={styles.input}
+                        onChange={(e) => setValue(e.target.value)}
+                    ></textarea>
+                    {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
                 </div>
-            </div>
 
-            <div className={styles.secondRow}>
-                <h4 className={styles.subtitle}>Resumo do post</h4>
-                <input type="text" name="title" id="" required className={styles.input} onChange={(e) => setResume(e.target.value)} />
-            </div>
-
-            <div className={styles.thirdRow}>
-                <h4 className={styles.subtitle}>Descrição</h4>
-                <textarea name="description" id="" rows="8" required className={styles.input} onChange={(e) => setValue(e.target.value)}></textarea>
-            </div>
-
-            <div className={styles.btnContainer}>
-                <button className={styles.btn} type='submit' onClick={handleSubmit}>Publicar</button>
-            </div>
-        </form>
-    </div>
-)
+                <div className={styles.btnContainer}>
+                    <button 
+                        className={styles.btn} 
+                        type='submit' 
+                        onClick={handleSubmit}
+                        
+                    >
+                        Publicar
+                    </button>
+                </div>
+            </form>
+        </div>
+    )
 }
 
 export default NewPostPage

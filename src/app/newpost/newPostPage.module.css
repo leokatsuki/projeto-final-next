@@ -19,6 +19,11 @@
   accent-color: #1b69d2;
 }
 
+.errorMessage{
+    color: red;
+}
+
+
 .input {
   padding: 10px 12px;
   background-color: #151b26;

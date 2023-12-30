@@ -24,7 +24,6 @@ const SignUpPage = () => {
     const registerUser = async (e) => {
         e.preventDefault();
         try {
-            // Validar os dados usando o schema do Zod
             schema.parse(data);
 
             const res = await fetch('/api/register', {
@@ -48,7 +47,6 @@ const SignUpPage = () => {
                 }, 3000);
             }
         } catch (error) {
-            // Se houver erro de validação, exibir a mensagem de erro correspondente
             setErrorMessage(error.errors[0]?.message || 'Erro no cadastro.');
             setTimeout(() => {
                 setErrorMessage('');
