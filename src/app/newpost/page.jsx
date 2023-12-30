@@ -93,7 +93,7 @@ const NewPostPage = () => {
             return;
         }
 
-        const res = await fetch("https://verdant-pika-6abce7.netlify.app/api/posts", {
+        const res = await fetch("https://projeto-final-next-mocha.vercel.app/api/posts", {
             method: "POST",
             body: JSON.stringify({
                 title,

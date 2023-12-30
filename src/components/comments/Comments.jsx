@@ -22,14 +22,14 @@ const fetcher = async (url) => {
 const Comments = ({ postSlug }) => {
   const { data: session, status } = useSession();
 
-  const { data, mutate, isLoading } = useSWR(`https://verdant-pika-6abce7.netlify.app/api/comments?postSlug=${postSlug}`,
+  const { data, mutate, isLoading } = useSWR(`https://projeto-final-next-mocha.vercel.app/api/comments?postSlug=${postSlug}`,
     fetcher
   );
 
   const [desc, setDesc] = useState("");
 
   const handleSubmit = async () => {
-    await fetch("/api/comments", {
+    await fetch("https://projeto-final-next-mocha.vercel.app/api/comments", {
       method: "POST",
       body: JSON.stringify({ desc, postSlug })
     });

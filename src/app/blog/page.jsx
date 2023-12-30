@@ -2,7 +2,7 @@ import Card from '@/components/card/Card'
 import styles from './blogPage.module.css'
 
 const getData = async () => {
-    const res = await fetch("/api/posts", {
+    const res = await fetch("https://projeto-final-next-mocha.vercel.app/api/posts", {
         cache: "no-store"
     })
 
