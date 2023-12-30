@@ -26,7 +26,7 @@ const SignUpPage = () => {
         try {
             schema.parse(data);
 
-            const res = await fetch('/api/register', {
+            const res = await fetch('https://verdant-pika-6abce7.netlify.app/api/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

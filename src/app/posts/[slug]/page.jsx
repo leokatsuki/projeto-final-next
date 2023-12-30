@@ -3,7 +3,7 @@ import styles from './postPage.module.css'
 import Image from 'next/image'
 
 const getData = async (slug) => {
-  const res = await fetch(`http://localhost:3001/api/posts/${slug}`, {
+  const res = await fetch(`https://verdant-pika-6abce7.netlify.app/api/posts/${slug}`, {
     cache: "no-store"
   })
 

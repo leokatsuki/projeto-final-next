@@ -2,7 +2,7 @@ import Card from '@/components/card/Card'
 import styles from './blogPage.module.css'
 
 const getData = async () => {
-    const res = await fetch("http://localhost:3001/api/posts", {
+    const res = await fetch("https://verdant-pika-6abce7.netlify.app/api/posts", {
         cache: "no-store"
     })
 

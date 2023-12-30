@@ -22,7 +22,7 @@ const fetcher = async (url) => {
 const Comments = ({ postSlug }) => {
   const { data: session, status } = useSession();
 
-  const { data, mutate, isLoading } = useSWR(`http://localhost:3001/api/comments?postSlug=${postSlug}`,
+  const { data, mutate, isLoading } = useSWR(`https://verdant-pika-6abce7.netlify.app/api/comments?postSlug=${postSlug}`,
     fetcher
   );
 

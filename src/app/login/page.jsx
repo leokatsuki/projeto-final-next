@@ -4,7 +4,7 @@ import styles from './loginPage.module.css'
 import Link from 'next/link'
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const LoginPage = () => {
     const { status, error } = useSession();
